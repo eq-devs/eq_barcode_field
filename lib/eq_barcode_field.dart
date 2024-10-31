@@ -212,10 +212,9 @@ class _BarcodeFieldState extends State<BarcodeField>
 
   Widget _buildSearchButton() {
     return widget.searchIconWidget ??
-        InkWell(
-
-            // padding: EdgeInsets.zero,
-            onTap: () => onBarcode(textEditingController.text),
+        CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => onBarcode(textEditingController.text),
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 42),
                 child: Container(
