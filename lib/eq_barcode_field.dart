@@ -54,7 +54,7 @@ class BarcodeField extends StatefulWidget {
   final Widget? prefix;
   final String? hintText;
   final FocusNode? focusNode;
-  final Function(String? barcode, TextEditingController controller)
+  final Function(String barcode, TextEditingController controller)
       onFieldSubmitted;
   // final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
