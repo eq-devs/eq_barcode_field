@@ -8,10 +8,7 @@ class UppercaseTextInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // Convert the entered text to uppercase
     return newValue.copyWith(
         text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }
-
-

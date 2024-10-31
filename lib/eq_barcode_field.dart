@@ -56,7 +56,6 @@ class BarcodeField extends StatefulWidget {
   final String? hintText;
   final FocusNode? focusNode;
   final Function(String barcode, BarcodeController controller) onFieldSubmitted;
-  // final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final TextStyle? style;
   final TextInputAction? textInputAction;
@@ -87,10 +86,9 @@ class _BarcodeFieldState extends State<BarcodeField>
   @override
   void initState() {
     super.initState();
-    barcodeController = BarcodeController();
+    barcodeController = BarcodeController(widget.isCameraEnabled);
     isShow = ValueNotifier(false);
     focusNode = widget.focusNode ?? barcodeController.focusNode;
-    // textEditingController = TextEditingController();
     _formKey = GlobalKey<FormState>();
     focusNode.addListener(() {
       isFocused = focusNode.hasFocus;
@@ -130,19 +128,13 @@ class _BarcodeFieldState extends State<BarcodeField>
     super.dispose();
   }
 
-  // bool get _isCameraEnabled =>
-  //     JpHive.readValue(AppKey.defCamera, defaultValue: false);
   final UppercaseTextInputFormatter _uppercaseFormatter =
       UppercaseTextInputFormatter();
 
   Future<void> _openQRScanner() async {
     final result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => const QRScanPage()));
-    // final result = await context.pushTo(());
     if (result is String && result != '-1') {
-      // textEditingController.text = result;
-      // widget.onFieldSubmitted?.call(result);
-
       onBarcode(result);
     }
   }
