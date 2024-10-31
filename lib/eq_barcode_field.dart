@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:barcode_newland_flutter/newland_scan_result.dart';
 import 'package:barcode_newland_flutter/newland_scanner.dart';
+import 'package:eq_barcode_field/controller.dart';
 import 'package:eq_barcode_field/page.dart';
 import 'package:eq_barcode_field/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,8 +55,7 @@ class BarcodeField extends StatefulWidget {
   final Widget? prefix;
   final String? hintText;
   final FocusNode? focusNode;
-  final Function(String barcode, TextEditingController controller)
-      onFieldSubmitted;
+  final Function(String barcode, BarcodeController controller) onFieldSubmitted;
   // final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final TextStyle? style;
@@ -75,20 +75,22 @@ class BarcodeField extends StatefulWidget {
 
 class _BarcodeFieldState extends State<BarcodeField>
     with AutomaticKeepAliveClientMixin {
-  late final FocusNode focusNode;
-  late final TextEditingController textEditingController;
+  late final BarcodeController barcodeController;
+  // late final FocusNode focusNode;
   late final StreamSubscription<NewlandScanResult> _barcodeSubscription;
   late ValueNotifier<bool> isShow;
   bool isFocused = false;
-
   late final GlobalKey<FormState> _formKey;
+
+  late final FocusNode focusNode;
 
   @override
   void initState() {
     super.initState();
+    barcodeController = BarcodeController();
     isShow = ValueNotifier(false);
-    focusNode = widget.focusNode ?? FocusNode();
-    textEditingController = TextEditingController();
+    focusNode = widget.focusNode ?? barcodeController.focusNode;
+    // textEditingController = TextEditingController();
     _formKey = GlobalKey<FormState>();
     focusNode.addListener(() {
       isFocused = focusNode.hasFocus;
@@ -101,19 +103,19 @@ class _BarcodeFieldState extends State<BarcodeField>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      textEditingController.addListener(() {
-        isShow.value = textEditingController.text.isNotEmpty;
+      barcodeController.textEditingController.addListener(() {
+        isShow.value = barcodeController.textEditingController.text.isNotEmpty;
       });
     });
   }
 
   void onBarcode(String barCode) {
-    if (isFocused || textEditingController.text.isEmpty) {
-      textEditingController.text = barCode;
+    if (isFocused || barcodeController.textEditingController.text.isEmpty) {
+      barcodeController.textEditingController.text = barCode;
       if (_formKey.currentState?.validate() ?? false) {
         // textEditingController.text = barCode;
         isShow.value = barCode.isNotEmpty;
-        widget.onFieldSubmitted(barCode, textEditingController);
+        widget.onFieldSubmitted(barCode, barcodeController);
         focusNode.unfocus();
       }
     }
@@ -123,7 +125,7 @@ class _BarcodeFieldState extends State<BarcodeField>
   void dispose() {
     _barcodeSubscription.cancel();
     focusNode.removeListener(() {});
-    textEditingController.dispose();
+    barcodeController.textEditingController.dispose();
     isShow.dispose();
     super.dispose();
   }
@@ -164,7 +166,7 @@ class _BarcodeFieldState extends State<BarcodeField>
                 }
                 return null;
               },
-              controller: textEditingController,
+              controller: barcodeController.textEditingController,
               onTapOutside: (_) =>
                   FocusManager.instance.primaryFocus?.unfocus(),
               decoration: InputDecoration(
@@ -201,7 +203,7 @@ class _BarcodeFieldState extends State<BarcodeField>
                   builder: (context, isShow, child) => !isShow
                       ? const SizedBox.shrink()
                       : GestureDetector(
-                          onTap: textEditingController.clear,
+                          onTap: barcodeController.textEditingController.clear,
                           child: const Icon(Icons.clear)),
                 ),
               ),
@@ -218,7 +220,8 @@ class _BarcodeFieldState extends State<BarcodeField>
     return widget.searchIconWidget ??
         CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () => onBarcode(textEditingController.text),
+            onPressed: () =>
+                onBarcode(barcodeController.textEditingController.text),
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 42),
                 child: Container(
