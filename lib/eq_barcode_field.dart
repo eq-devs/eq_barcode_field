@@ -28,7 +28,7 @@ class BarcodeField extends StatefulWidget {
       this.prefix,
       this.hintText,
       this.focusNode,
-      this.onFieldSubmitted,
+      required this.onFieldSubmitted,
       this.inputFormatters,
       this.style,
       this.textInputAction,
@@ -54,7 +54,9 @@ class BarcodeField extends StatefulWidget {
   final Widget? prefix;
   final String? hintText;
   final FocusNode? focusNode;
-  final ValueChanged<String>? onFieldSubmitted;
+  final Function(String? barcode, TextEditingController controller)
+      onFieldSubmitted;
+  // final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final TextStyle? style;
   final TextInputAction? textInputAction;
@@ -111,7 +113,7 @@ class _BarcodeFieldState extends State<BarcodeField>
       if (_formKey.currentState?.validate() ?? false) {
         // textEditingController.text = barCode;
         isShow.value = barCode.isNotEmpty;
-        widget.onFieldSubmitted?.call(barCode);
+        widget.onFieldSubmitted(barCode, textEditingController);
         focusNode.unfocus();
       }
     }
@@ -136,8 +138,10 @@ class _BarcodeFieldState extends State<BarcodeField>
         context, MaterialPageRoute(builder: (context) => const QRScanPage()));
     // final result = await context.pushTo(());
     if (result is String && result != '-1') {
-      textEditingController.text = result;
-      widget.onFieldSubmitted?.call(result);
+      // textEditingController.text = result;
+      // widget.onFieldSubmitted?.call(result);
+
+      onBarcode(result);
     }
   }
 
