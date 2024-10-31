@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:barcode_newland_flutter/newland_scan_result.dart';
 import 'package:barcode_newland_flutter/newland_scanner.dart';
-import 'package:eq_barcode_field/barcode.dart';
+import 'package:eq_barcode_field/page.dart';
 import 'package:eq_barcode_field/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -213,6 +213,7 @@ class _BarcodeFieldState extends State<BarcodeField>
   Widget _buildSearchButton() {
     return widget.searchIconWidget ??
         CupertinoButton(
+            padding: EdgeInsets.zero,
             onPressed: () => onBarcode(textEditingController.text),
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 42),
