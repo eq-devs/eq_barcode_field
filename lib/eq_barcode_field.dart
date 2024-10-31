@@ -219,6 +219,7 @@ class _BarcodeFieldState extends State<BarcodeField>
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 42),
                 child: Container(
+                    margin: EdgeInsets.zero,
                     padding: const EdgeInsets.all(8),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
