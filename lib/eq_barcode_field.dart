@@ -149,6 +149,7 @@ class _BarcodeFieldState extends State<BarcodeField>
             key: _formKey,
             child: TextFormField(
               focusNode: focusNode,
+              textInputAction: widget.textInputAction,
               inputFormatters: [_uppercaseFormatter],
               onTap: widget.isCameraEnabled ? _openQRScanner : null,
               readOnly: widget.isCameraEnabled,
