@@ -1,6 +1,7 @@
 library eq_barcode_field;
 
 import 'dart:async';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 import 'package:barcode_newland_flutter/newland_scan_result.dart';
 import 'package:barcode_newland_flutter/newland_scanner.dart';
@@ -40,7 +41,8 @@ class BarcodeField extends StatefulWidget {
       this.initStr,
       this.searchIconData,
       this.searchIconWidget,
-      required this.isCameraEnabled});
+      required this.isCameraEnabled,
+      this.onClean});
   final Color? fillColor;
   final BorderRadius? borderRadius;
   final VoidCallback? onTap;
@@ -68,6 +70,9 @@ class BarcodeField extends StatefulWidget {
   final IconData? searchIconData;
   final Widget? searchIconWidget;
   final bool isCameraEnabled;
+
+  final VoidCallback? onClean;
+
   @override
   State<BarcodeField> createState() => _BarcodeFieldState();
 }
@@ -103,6 +108,10 @@ class _BarcodeFieldState extends State<BarcodeField>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       barcodeController.textEditingController.addListener(() {
         isShow.value = barcodeController.textEditingController.text.isNotEmpty;
+
+        if (!isShow.value) {
+          widget.onClean?.call();
+        }
       });
     });
   }
