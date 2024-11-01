@@ -116,7 +116,9 @@ class _BarcodeFieldState extends State<BarcodeField>
   }
 
   void onBarcode(String barCode) {
-    if (isFocused || barcodeController.textEditingController.text.isEmpty) {
+    if (isFocused
+        //|| barcodeController.textEditingController.text.isEmpty
+        ) {
       barcodeController.textEditingController.text = barCode;
       if (_formKey.currentState?.validate() ?? false) {
         // textEditingController.text = barCode;
