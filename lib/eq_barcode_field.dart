@@ -79,12 +79,10 @@ class BarcodeField extends StatefulWidget {
 class _BarcodeFieldState extends State<BarcodeField>
     with AutomaticKeepAliveClientMixin {
   late final BarcodeController barcodeController;
-  // late final FocusNode focusNode;
   late final StreamSubscription<NewlandScanResult> _barcodeSubscription;
   late ValueNotifier<bool> isShow;
   bool isFocused = false;
   late final GlobalKey<FormState> _formKey;
-
   late final FocusNode focusNode;
 
   @override
@@ -100,14 +98,14 @@ class _BarcodeFieldState extends State<BarcodeField>
 
     _barcodeSubscription = Newlandscanner.listenForBarcodes.listen((event) {
       if (event.barcodeSuccess) {
-        onBarcode(event.barcodeData);
+        onBarcodeStr = event.barcodeData;
+        onBarcode();
       }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       barcodeController.textEditingController.addListener(() {
         isShow.value = barcodeController.textEditingController.text.isNotEmpty;
-
         if (!isShow.value) {
           widget.onClean?.call();
         }
@@ -115,15 +113,15 @@ class _BarcodeFieldState extends State<BarcodeField>
     });
   }
 
-  void onBarcode(String barCode) {
-    if (isFocused
-        //|| barcodeController.textEditingController.text.isEmpty
-        ) {
-      barcodeController.textEditingController.text = barCode;
+  set onBarcodeStr(String str) =>
+      barcodeController.textEditingController.text = str.trim();
+  String get getBarcode => barcodeController.textEditingController.text.trim();
+
+  void onBarcode() {
+    if (isFocused) {
       if (_formKey.currentState?.validate() ?? false) {
-        // textEditingController.text = barCode;
-        isShow.value = barCode.isNotEmpty;
-        widget.onFieldSubmitted(barCode, barcodeController);
+        isShow.value = getBarcode.isNotEmpty;
+        widget.onFieldSubmitted(getBarcode, barcodeController);
         focusNode.unfocus();
       }
     }
@@ -145,7 +143,8 @@ class _BarcodeFieldState extends State<BarcodeField>
     final result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => const QRScanPage()));
     if (result is String && result != '-1') {
-      onBarcode(result);
+      onBarcodeStr = result;
+      onBarcode();
     }
   }
 
@@ -172,6 +171,10 @@ class _BarcodeFieldState extends State<BarcodeField>
               controller: barcodeController.textEditingController,
               onTapOutside: (_) =>
                   FocusManager.instance.primaryFocus?.unfocus(),
+              onFieldSubmitted: (value) {
+                onBarcodeStr = value;
+                onBarcode();
+              },
               decoration: InputDecoration(
                 filled: false,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 8),
@@ -223,8 +226,7 @@ class _BarcodeFieldState extends State<BarcodeField>
     return widget.searchIconWidget ??
         CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () =>
-                onBarcode(barcodeController.textEditingController.text),
+            onPressed: onBarcode,
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 42),
                 child: Container(
