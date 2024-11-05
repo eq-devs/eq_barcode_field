@@ -101,8 +101,10 @@ class _BarcodeFieldState extends State<BarcodeField>
     isShow = ValueNotifier(false);
     _barcodeSubscription = Newlandscanner.listenForBarcodes.listen((event) {
       if (event.barcodeSuccess) {
-        barcodeController.setBarcode = event.barcodeData;
-        onBarcode();
+        if (barcodeController.getBarcode.isEmpty) {
+          barcodeController.setBarcode = event.barcodeData;
+          onBarcode();
+        }
       }
     });
 
