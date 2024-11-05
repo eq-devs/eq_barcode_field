@@ -10,6 +10,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'page.dart';
+
 @immutable
 class BarcodeField extends StatefulWidget {
   const BarcodeField({
@@ -135,12 +137,12 @@ class _BarcodeFieldState extends State<BarcodeField>
   }
 
   Future<void> _openQRScanner() async {
-    // final result = await Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => const QRScanPage()));
-    // if (result is String && result != '-1') {
-    //   onBarcodeStr = result;
-    //   onBarcode();
-    // }
+    final result = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const QRScanPage()));
+    if (result is String && result != '-1') {
+      barcodeController.setBarcode = result;
+      onBarcode();
+    }
   }
 
   @override
@@ -177,20 +179,20 @@ class _BarcodeFieldState extends State<BarcodeField>
               labelStyle: const TextStyle(color: Colors.grey),
               border: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: small),
+                  borderRadius: BorderRadius.circular(8)),
               focusedBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: small),
+                  borderRadius: BorderRadius.circular(8)),
               enabledBorder: OutlineInputBorder(
-                borderRadius: small,
+                borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
               errorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red),
-                  borderRadius: small),
+                  borderRadius: BorderRadius.circular(8)),
               focusedErrorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red),
-                  borderRadius: small),
+                  borderRadius: BorderRadius.circular(8)),
               suffixIcon: ValueListenableBuilder(
                 valueListenable: isShow,
                 builder: (context, isShow, child) => !isShow
@@ -222,11 +224,9 @@ class _BarcodeFieldState extends State<BarcodeField>
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
-                      borderRadius: small),
+                      borderRadius: BorderRadius.circular(8)),
                   child: Icon(widget.searchIconData ?? Icons.search))));
 
   @override
   bool get wantKeepAlive => true;
 }
-
-BorderRadius get small => BorderRadius.circular(8);
