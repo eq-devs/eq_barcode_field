@@ -14,36 +14,36 @@ import 'page.dart';
 
 @immutable
 class BarcodeField extends StatefulWidget {
-  const BarcodeField({
-    super.key,
-    this.fillColor,
-    this.borderRadius,
-    this.onTap,
-    this.onEditingCompleted,
-    this.keyboardType,
-    this.onChanged,
-    this.autofocus,
-    this.enabled,
-    this.errorText,
-    this.label,
-    this.suffix,
-    this.prefix,
-    this.hintText,
-    this.focusNode,
-    required this.onFieldSubmitted,
-    this.inputFormatters,
-    this.style,
-    this.textInputAction,
-    this.maxLength,
-    this.maxLines,
-    this.mustValidate,
-    this.prefixIcon,
-    this.initStr,
-    this.searchIconData,
-    this.searchIconWidget,
-    required this.isCameraEnabled,
-    this.onClean,
-  });
+  const BarcodeField(
+      {super.key,
+      this.fillColor,
+      this.borderRadius,
+      this.onTap,
+      this.onEditingCompleted,
+      this.keyboardType,
+      this.onChanged,
+      this.autofocus,
+      this.enabled,
+      this.errorText,
+      this.label,
+      this.suffix,
+      this.prefix,
+      this.hintText,
+      this.focusNode,
+      required this.onFieldSubmitted,
+      this.inputFormatters,
+      this.style,
+      this.textInputAction,
+      this.maxLength,
+      this.maxLines,
+      this.mustValidate,
+      this.prefixIcon,
+      this.initStr,
+      this.searchIconData,
+      this.searchIconWidget,
+      required this.isCameraEnabled,
+      this.onClean,
+      this.loopScan = false});
 
   final Color? fillColor;
   final BorderRadius? borderRadius;
@@ -73,6 +73,7 @@ class BarcodeField extends StatefulWidget {
   final Widget? searchIconWidget;
   final bool isCameraEnabled;
   final VoidCallback? onClean;
+  final bool loopScan;
 
   @override
   State<BarcodeField> createState() => _BarcodeFieldState();
@@ -102,11 +103,10 @@ class _BarcodeFieldState extends State<BarcodeField>
         onFieldSubmitted: widget.onFieldSubmitted);
     isShow = ValueNotifier(false);
     _barcodeSubscription = Newlandscanner.listenForBarcodes.listen((event) {
-      if (event.barcodeSuccess) {
-        if (barcodeController.getBarcode.isEmpty) {
-          barcodeController.setBarcode = event.barcodeData;
-          onBarcode();
-        }
+      if (event.barcodeSuccess &&
+          (widget.loopScan || barcodeController.getBarcode.isEmpty)) {
+        barcodeController.setBarcode = event.barcodeData;
+        onBarcode();
       }
     });
 
