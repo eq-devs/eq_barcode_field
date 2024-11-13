@@ -24,15 +24,17 @@ final class ScanService {
     _inited = true;
   }
 
-  Future<void> openScanner(BuildContext context) async {
+  Future<NewlandScanResult?> openScanner(BuildContext context) async {
     final result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => const QRScanPage()));
     if (result is String && result != '-1') {
       if (_inited) {
         final res = NewlandScanResult(result, result, true);
         _barcodeController.add(res);
+        return res;
       }
     }
+    return null;
   }
 
   void dispose() {
