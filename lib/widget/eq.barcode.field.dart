@@ -4,13 +4,13 @@ import 'dart:async';
 
 import 'package:barcode_newland_flutter/newland_scan_result.dart';
 import 'package:barcode_newland_flutter/newland_scanner.dart';
-import 'package:eq_barcode_field/controller.dart';
-import 'package:eq_barcode_field/widget.dart';
+import 'package:eq_barcode_field/controller/controller.dart';
+import 'package:eq_barcode_field/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'page.dart';
+import '../page/page.dart';
 
 @immutable
 class BarcodeField extends StatefulWidget {

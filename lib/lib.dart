@@ -1,5 +1,5 @@
-export 'controller.dart';
-export 'eq_barcode_field.dart';
-export 'page.dart';
+export 'controller/controller.dart';
+export 'widget/eq.barcode.field.dart';
+export 'page/page.dart';
 export 'service/scan.dart';
-export 'widget.dart';
+export 'widget/widget.dart';
