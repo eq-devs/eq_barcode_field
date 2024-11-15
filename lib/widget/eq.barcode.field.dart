@@ -100,7 +100,8 @@ class _BarcodeFieldState extends State<BarcodeField>
         textEditingController: textEditingController,
         focusNode: focusNode,
         isCameraEnabled: widget.isCameraEnabled,
-        onFieldSubmitted: widget.onFieldSubmitted);
+        onFieldSubmitted: widget.onFieldSubmitted,
+        formKey: _formKey);
     isShow = ValueNotifier(false);
     _barcodeSubscription = Newlandscanner.listenForBarcodes.listen((event) {
       if (event.barcodeSuccess &&
